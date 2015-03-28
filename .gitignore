@@ -1,0 +1,6 @@
+Debug/
+.launches/
+Demo/
+Release/
+*.lnt
+.config/
