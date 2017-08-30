@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -8,7 +8,7 @@
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 
     ***************************************************************************
     >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -72,7 +72,7 @@
 #define TIMERS_H
 
 #ifndef INC_FREERTOS_H
-#error "include FreeRTOS.h must appear in source files before include timers.h"
+	#error "include FreeRTOS.h must appear in source files before include timers.h"
 #endif
 
 /*lint -e537 This headers are only multiply included if the application code
@@ -93,20 +93,20 @@ be used solely through the macros that make up the public software timer API,
 as defined below.  The commands that are sent from interrupts must use the
 highest numbers as tmrFIRST_FROM_ISR_COMMAND is used to determine if the task
 or interrupt version of the queue send function should be used. */
-#define tmrCOMMAND_EXECUTE_CALLBACK_FROM_ISR    ( ( BaseType_t ) -2 )
-#define tmrCOMMAND_EXECUTE_CALLBACK             ( ( BaseType_t ) -1 )
-#define tmrCOMMAND_START_DONT_TRACE             ( ( BaseType_t ) 0 )
-#define tmrCOMMAND_START                        ( ( BaseType_t ) 1 )
-#define tmrCOMMAND_RESET                        ( ( BaseType_t ) 2 )
-#define tmrCOMMAND_STOP                         ( ( BaseType_t ) 3 )
-#define tmrCOMMAND_CHANGE_PERIOD                ( ( BaseType_t ) 4 )
-#define tmrCOMMAND_DELETE                       ( ( BaseType_t ) 5 )
+#define tmrCOMMAND_EXECUTE_CALLBACK_FROM_ISR 	( ( BaseType_t ) -2 )
+#define tmrCOMMAND_EXECUTE_CALLBACK				( ( BaseType_t ) -1 )
+#define tmrCOMMAND_START_DONT_TRACE				( ( BaseType_t ) 0 )
+#define tmrCOMMAND_START					    ( ( BaseType_t ) 1 )
+#define tmrCOMMAND_RESET						( ( BaseType_t ) 2 )
+#define tmrCOMMAND_STOP							( ( BaseType_t ) 3 )
+#define tmrCOMMAND_CHANGE_PERIOD				( ( BaseType_t ) 4 )
+#define tmrCOMMAND_DELETE						( ( BaseType_t ) 5 )
 
-#define tmrFIRST_FROM_ISR_COMMAND               ( ( BaseType_t ) 6 )
-#define tmrCOMMAND_START_FROM_ISR               ( ( BaseType_t ) 6 )
-#define tmrCOMMAND_RESET_FROM_ISR               ( ( BaseType_t ) 7 )
-#define tmrCOMMAND_STOP_FROM_ISR                ( ( BaseType_t ) 8 )
-#define tmrCOMMAND_CHANGE_PERIOD_FROM_ISR       ( ( BaseType_t ) 9 )
+#define tmrFIRST_FROM_ISR_COMMAND				( ( BaseType_t ) 6 )
+#define tmrCOMMAND_START_FROM_ISR				( ( BaseType_t ) 6 )
+#define tmrCOMMAND_RESET_FROM_ISR				( ( BaseType_t ) 7 )
+#define tmrCOMMAND_STOP_FROM_ISR				( ( BaseType_t ) 8 )
+#define tmrCOMMAND_CHANGE_PERIOD_FROM_ISR		( ( BaseType_t ) 9 )
 
 
 /**
@@ -115,7 +115,7 @@ or interrupt version of the queue send function should be used. */
  * reference the subject timer in calls to other software timer API functions
  * (for example, xTimerStart(), xTimerReset(), etc.).
  */
-typedef void *TimerHandle_t;
+typedef void * TimerHandle_t;
 
 /*
  * Defines the prototype to which timer callback functions must conform.
@@ -129,15 +129,23 @@ typedef void (*TimerCallbackFunction_t)( TimerHandle_t xTimer );
 typedef void (*PendedFunction_t)( void *, uint32_t );
 
 /**
- * TimerHandle_t xTimerCreate(  const char * const pcTimerName,
- *                              TickType_t xTimerPeriodInTicks,
- *                              UBaseType_t uxAutoReload,
- *                              void * pvTimerID,
- *                              TimerCallbackFunction_t pxCallbackFunction );
+ * TimerHandle_t xTimerCreate( 	const char * const pcTimerName,
+ * 								TickType_t xTimerPeriodInTicks,
+ * 								UBaseType_t uxAutoReload,
+ * 								void * pvTimerID,
+ * 								TimerCallbackFunction_t pxCallbackFunction );
  *
- * Creates a new software timer instance.  This allocates the storage required
- * by the new timer, initialises the new timers internal state, and returns a
- * handle by which the new timer can be referenced.
+ * Creates a new software timer instance, and returns a handle by which the
+ * created software timer can be referenced.
+ *
+ * Internally, within the FreeRTOS implementation, software timers use a block
+ * of memory, in which the timer data structure is stored.  If a software timer
+ * is created using xTimerCreate() then the required memory is automatically
+ * dynamically allocated inside the xTimerCreate() function.  (see
+ * http://www.freertos.org/a00111.html).  If a software timer is created using
+ * xTimerCreateStatic() then the application writer must provide the memory that
+ * will get used by the software timer.  xTimerCreateStatic() therefore allows a
+ * software timer to be created without using any dynamic memory allocation.
  *
  * Timers are created in the dormant state.  The xTimerStart(), xTimerReset(),
  * xTimerStartFromISR(), xTimerResetFromISR(), xTimerChangePeriod() and
@@ -168,7 +176,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  *
  * @param pxCallbackFunction The function to call when the timer expires.
  * Callback functions must have the prototype defined by TimerCallbackFunction_t,
- * which is "void vCallbackFunction( TimerHandle_t xTimer );".
+ * which is	"void vCallbackFunction( TimerHandle_t xTimer );".
  *
  * @return If the timer is successfully created then a handle to the newly
  * created timer is returned.  If the timer cannot be created (because either
@@ -194,8 +202,8 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * int32_t lArrayIndex;
  * const int32_t xMaxExpiryCountBeforeStopping = 10;
  *
- *     // Optionally do something if the pxTimer parameter is NULL.
- *     configASSERT( pxTimer );
+ * 	   // Optionally do something if the pxTimer parameter is NULL.
+ * 	   configASSERT( pxTimer );
  *
  *     // Which timer expired?
  *     lArrayIndex = ( int32_t ) pvTimerGetTimerID( pxTimer );
@@ -250,17 +258,151 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  *
  *     // Starting the scheduler will start the timers running as they have already
  *     // been set into the active state.
- *     xTaskStartScheduler();
+ *     vTaskStartScheduler();
  *
  *     // Should not reach here.
  *     for( ;; );
  * }
  * @endverbatim
  */
-TimerHandle_t xTimerCreate( const char *const pcTimerName,
-                            const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload,
-                            void *const pvTimerID, TimerCallbackFunction_t pxCallbackFunction )
-PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	TimerHandle_t xTimerCreate(	const char * const pcTimerName,
+								const TickType_t xTimerPeriodInTicks,
+								const UBaseType_t uxAutoReload,
+								void * const pvTimerID,
+								TimerCallbackFunction_t pxCallbackFunction ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+#endif
+
+/**
+ * TimerHandle_t xTimerCreateStatic(const char * const pcTimerName,
+ * 									TickType_t xTimerPeriodInTicks,
+ * 									UBaseType_t uxAutoReload,
+ * 									void * pvTimerID,
+ * 									TimerCallbackFunction_t pxCallbackFunction,
+ *									StaticTimer_t *pxTimerBuffer );
+ *
+ * Creates a new software timer instance, and returns a handle by which the
+ * created software timer can be referenced.
+ *
+ * Internally, within the FreeRTOS implementation, software timers use a block
+ * of memory, in which the timer data structure is stored.  If a software timer
+ * is created using xTimerCreate() then the required memory is automatically
+ * dynamically allocated inside the xTimerCreate() function.  (see
+ * http://www.freertos.org/a00111.html).  If a software timer is created using
+ * xTimerCreateStatic() then the application writer must provide the memory that
+ * will get used by the software timer.  xTimerCreateStatic() therefore allows a
+ * software timer to be created without using any dynamic memory allocation.
+ *
+ * Timers are created in the dormant state.  The xTimerStart(), xTimerReset(),
+ * xTimerStartFromISR(), xTimerResetFromISR(), xTimerChangePeriod() and
+ * xTimerChangePeriodFromISR() API functions can all be used to transition a
+ * timer into the active state.
+ *
+ * @param pcTimerName A text name that is assigned to the timer.  This is done
+ * purely to assist debugging.  The kernel itself only ever references a timer
+ * by its handle, and never by its name.
+ *
+ * @param xTimerPeriodInTicks The timer period.  The time is defined in tick
+ * periods so the constant portTICK_PERIOD_MS can be used to convert a time that
+ * has been specified in milliseconds.  For example, if the timer must expire
+ * after 100 ticks, then xTimerPeriodInTicks should be set to 100.
+ * Alternatively, if the timer must expire after 500ms, then xPeriod can be set
+ * to ( 500 / portTICK_PERIOD_MS ) provided configTICK_RATE_HZ is less than or
+ * equal to 1000.
+ *
+ * @param uxAutoReload If uxAutoReload is set to pdTRUE then the timer will
+ * expire repeatedly with a frequency set by the xTimerPeriodInTicks parameter.
+ * If uxAutoReload is set to pdFALSE then the timer will be a one-shot timer and
+ * enter the dormant state after it expires.
+ *
+ * @param pvTimerID An identifier that is assigned to the timer being created.
+ * Typically this would be used in the timer callback function to identify which
+ * timer expired when the same callback function is assigned to more than one
+ * timer.
+ *
+ * @param pxCallbackFunction The function to call when the timer expires.
+ * Callback functions must have the prototype defined by TimerCallbackFunction_t,
+ * which is "void vCallbackFunction( TimerHandle_t xTimer );".
+ *
+ * @param pxTimerBuffer Must point to a variable of type StaticTimer_t, which
+ * will be then be used to hold the software timer's data structures, removing
+ * the need for the memory to be allocated dynamically.
+ *
+ * @return If the timer is created then a handle to the created timer is
+ * returned.  If pxTimerBuffer was NULL then NULL is returned.
+ *
+ * Example usage:
+ * @verbatim
+ *
+ * // The buffer used to hold the software timer's data structure.
+ * static StaticTimer_t xTimerBuffer;
+ *
+ * // A variable that will be incremented by the software timer's callback
+ * // function.
+ * UBaseType_t uxVariableToIncrement = 0;
+ *
+ * // A software timer callback function that increments a variable passed to
+ * // it when the software timer was created.  After the 5th increment the
+ * // callback function stops the software timer.
+ * static void prvTimerCallback( TimerHandle_t xExpiredTimer )
+ * {
+ * UBaseType_t *puxVariableToIncrement;
+ * BaseType_t xReturned;
+ *
+ *     // Obtain the address of the variable to increment from the timer ID.
+ *     puxVariableToIncrement = ( UBaseType_t * ) pvTimerGetTimerID( xExpiredTimer );
+ *
+ *     // Increment the variable to show the timer callback has executed.
+ *     ( *puxVariableToIncrement )++;
+ *
+ *     // If this callback has executed the required number of times, stop the
+ *     // timer.
+ *     if( *puxVariableToIncrement == 5 )
+ *     {
+ *         // This is called from a timer callback so must not block.
+ *         xTimerStop( xExpiredTimer, staticDONT_BLOCK );
+ *     }
+ * }
+ *
+ *
+ * void main( void )
+ * {
+ *     // Create the software time.  xTimerCreateStatic() has an extra parameter
+ *     // than the normal xTimerCreate() API function.  The parameter is a pointer
+ *     // to the StaticTimer_t structure that will hold the software timer
+ *     // structure.  If the parameter is passed as NULL then the structure will be
+ *     // allocated dynamically, just as if xTimerCreate() had been called.
+ *     xTimer = xTimerCreateStatic( "T1",             // Text name for the task.  Helps debugging only.  Not used by FreeRTOS.
+ *                                  xTimerPeriod,     // The period of the timer in ticks.
+ *                                  pdTRUE,           // This is an auto-reload timer.
+ *                                  ( void * ) &uxVariableToIncrement,    // A variable incremented by the software timer's callback function
+ *                                  prvTimerCallback, // The function to execute when the timer expires.
+ *                                  &xTimerBuffer );  // The buffer that will hold the software timer structure.
+ *
+ *     // The scheduler has not started yet so a block time is not used.
+ *     xReturned = xTimerStart( xTimer, 0 );
+ *
+ *     // ...
+ *     // Create tasks here.
+ *     // ...
+ *
+ *     // Starting the scheduler will start the timers running as they have already
+ *     // been set into the active state.
+ *     vTaskStartScheduler();
+ *
+ *     // Should not reach here.
+ *     for( ;; );
+ * }
+ * @endverbatim
+ */
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	TimerHandle_t xTimerCreateStatic(	const char * const pcTimerName,
+										const TickType_t xTimerPeriodInTicks,
+										const UBaseType_t uxAutoReload,
+										void * const pvTimerID,
+										TimerCallbackFunction_t pxCallbackFunction,
+										StaticTimer_t *pxTimerBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
  * void *pvTimerGetTimerID( TimerHandle_t xTimer );
@@ -282,7 +424,7 @@ PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings
  *
  * See the xTimerCreate() API function example usage scenario.
  */
-void *pvTimerGetTimerID( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+void *pvTimerGetTimerID( const TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 
 /**
  * void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID );
@@ -303,8 +445,7 @@ void *pvTimerGetTimerID( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
  *
  * See the xTimerCreate() API function example usage scenario.
  */
-void vTimerSetTimerID( const TimerHandle_t xTimer,
-                       void *pvNewID ) PRIVILEGED_FUNCTION;
+void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID ) PRIVILEGED_FUNCTION;
 
 /**
  * BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer );
@@ -346,13 +487,10 @@ BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 /**
  * TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
- * xTimerGetTimerDaemonTaskHandle() is only available if
- * INCLUDE_xTimerGetTimerDaemonTaskHandle is set to 1 in FreeRTOSConfig.h.
- *
  * Simply returns the handle of the timer service/daemon task.  It it not valid
  * to call xTimerGetTimerDaemonTaskHandle() before the scheduler has been started.
  */
-TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
+TaskHandle_t xTimerGetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
 
 /**
  * BaseType_t xTimerStart( TimerHandle_t xTimer, TickType_t xTicksToWait );
@@ -449,9 +587,9 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 #define xTimerStop( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP, 0U, NULL, ( xTicksToWait ) )
 
 /**
- * BaseType_t xTimerChangePeriod(   TimerHandle_t xTimer,
- *                                      TickType_t xNewPeriod,
- *                                      TickType_t xTicksToWait );
+ * BaseType_t xTimerChangePeriod( 	TimerHandle_t xTimer,
+ *										TickType_t xNewPeriod,
+ *										TickType_t xTicksToWait );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
@@ -526,7 +664,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
-#define xTimerChangePeriod( xTimer, xNewPeriod, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), NULL, ( xTicksToWait ) )
+ #define xTimerChangePeriod( xTimer, xNewPeriod, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerDelete( TimerHandle_t xTimer, TickType_t xTicksToWait );
@@ -681,7 +819,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
  *     // Starting the scheduler will start the timer running as it has already
  *     // been set into the active state.
- *     xTaskStartScheduler();
+ *     vTaskStartScheduler();
  *
  *     // Should not reach here.
  *     for( ;; );
@@ -691,8 +829,8 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 #define xTimerReset( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET, ( xTaskGetTickCount() ), NULL, ( xTicksToWait ) )
 
 /**
- * BaseType_t xTimerStartFromISR(   TimerHandle_t xTimer,
- *                                  BaseType_t *pxHigherPriorityTaskWoken );
+ * BaseType_t xTimerStartFromISR( 	TimerHandle_t xTimer,
+ *									BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerStart() that can be called from an interrupt service
  * routine.
@@ -777,8 +915,8 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 #define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
- * BaseType_t xTimerStopFromISR(    TimerHandle_t xTimer,
- *                                  BaseType_t *pxHigherPriorityTaskWoken );
+ * BaseType_t xTimerStopFromISR( 	TimerHandle_t xTimer,
+ *									BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerStop() that can be called from an interrupt service
  * routine.
@@ -841,8 +979,8 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 
 /**
  * BaseType_t xTimerChangePeriodFromISR( TimerHandle_t xTimer,
- *                                       TickType_t xNewPeriod,
- *                                       BaseType_t *pxHigherPriorityTaskWoken );
+ *										 TickType_t xNewPeriod,
+ *										 BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerChangePeriod() that can be called from an interrupt
  * service routine.
@@ -913,8 +1051,8 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 #define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD_FROM_ISR, ( xNewPeriod ), ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
- * BaseType_t xTimerResetFromISR(   TimerHandle_t xTimer,
- *                                  BaseType_t *pxHigherPriorityTaskWoken );
+ * BaseType_t xTimerResetFromISR( 	TimerHandle_t xTimer,
+ *									BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerReset() that can be called from an interrupt service
  * routine.
@@ -1049,85 +1187,82 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * Example usage:
  * @verbatim
  *
- *  // The callback function that will execute in the context of the daemon task.
+ *	// The callback function that will execute in the context of the daemon task.
  *  // Note callback functions must all use this same prototype.
  *  void vProcessInterface( void *pvParameter1, uint32_t ulParameter2 )
- *  {
- *      BaseType_t xInterfaceToService;
+ *	{
+ *		BaseType_t xInterfaceToService;
  *
- *      // The interface that requires servicing is passed in the second
+ *		// The interface that requires servicing is passed in the second
  *      // parameter.  The first parameter is not used in this case.
- *      xInterfaceToService = ( BaseType_t ) ulParameter2;
+ *		xInterfaceToService = ( BaseType_t ) ulParameter2;
  *
- *      // ...Perform the processing here...
- *  }
+ *		// ...Perform the processing here...
+ *	}
  *
- *  // An ISR that receives data packets from multiple interfaces
+ *	// An ISR that receives data packets from multiple interfaces
  *  void vAnISR( void )
- *  {
- *      BaseType_t xInterfaceToService, xHigherPriorityTaskWoken;
+ *	{
+ *		BaseType_t xInterfaceToService, xHigherPriorityTaskWoken;
  *
- *      // Query the hardware to determine which interface needs processing.
- *      xInterfaceToService = prvCheckInterfaces();
+ *		// Query the hardware to determine which interface needs processing.
+ *		xInterfaceToService = prvCheckInterfaces();
  *
  *      // The actual processing is to be deferred to a task.  Request the
  *      // vProcessInterface() callback function is executed, passing in the
- *      // number of the interface that needs processing.  The interface to
- *      // service is passed in the second parameter.  The first parameter is
- *      // not used in this case.
- *      xHigherPriorityTaskWoken = pdFALSE;
- *      xTimerPendFunctionCallFromISR( vProcessInterface, NULL, ( uint32_t ) xInterfaceToService, &xHigherPriorityTaskWoken );
+ *		// number of the interface that needs processing.  The interface to
+ *		// service is passed in the second parameter.  The first parameter is
+ *		// not used in this case.
+ *		xHigherPriorityTaskWoken = pdFALSE;
+ *		xTimerPendFunctionCallFromISR( vProcessInterface, NULL, ( uint32_t ) xInterfaceToService, &xHigherPriorityTaskWoken );
  *
- *      // If xHigherPriorityTaskWoken is now set to pdTRUE then a context
- *      // switch should be requested.  The macro used is port specific and will
- *      // be either portYIELD_FROM_ISR() or portEND_SWITCHING_ISR() - refer to
- *      // the documentation page for the port being used.
- *      portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+ *		// If xHigherPriorityTaskWoken is now set to pdTRUE then a context
+ *		// switch should be requested.  The macro used is port specific and will
+ *		// be either portYIELD_FROM_ISR() or portEND_SWITCHING_ISR() - refer to
+ *		// the documentation page for the port being used.
+ *		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
  *
- *  }
+ *	}
  * @endverbatim
  */
-BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend,
-        void *pvParameter1, uint32_t ulParameter2,
-        BaseType_t *pxHigherPriorityTaskWoken );
+BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+
+ /**
+  * BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend,
+  *                                    void *pvParameter1,
+  *                                    uint32_t ulParameter2,
+  *                                    TickType_t xTicksToWait );
+  *
+  *
+  * Used to defer the execution of a function to the RTOS daemon task (the timer
+  * service task, hence this function is implemented in timers.c and is prefixed
+  * with 'Timer').
+  *
+  * @param xFunctionToPend The function to execute from the timer service/
+  * daemon task.  The function must conform to the PendedFunction_t
+  * prototype.
+  *
+  * @param pvParameter1 The value of the callback function's first parameter.
+  * The parameter has a void * type to allow it to be used to pass any type.
+  * For example, unsigned longs can be cast to a void *, or the void * can be
+  * used to point to a structure.
+  *
+  * @param ulParameter2 The value of the callback function's second parameter.
+  *
+  * @param xTicksToWait Calling this function will result in a message being
+  * sent to the timer daemon task on a queue.  xTicksToWait is the amount of
+  * time the calling task should remain in the Blocked state (so not using any
+  * processing time) for space to become available on the timer queue if the
+  * queue is found to be full.
+  *
+  * @return pdPASS is returned if the message was successfully sent to the
+  * timer daemon task, otherwise pdFALSE is returned.
+  *
+  */
+BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /**
- * BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend,
- *                                    void *pvParameter1,
- *                                    uint32_t ulParameter2,
- *                                    TickType_t xTicksToWait );
- *
- *
- * Used to defer the execution of a function to the RTOS daemon task (the timer
- * service task, hence this function is implemented in timers.c and is prefixed
- * with 'Timer').
- *
- * @param xFunctionToPend The function to execute from the timer service/
- * daemon task.  The function must conform to the PendedFunction_t
- * prototype.
- *
- * @param pvParameter1 The value of the callback function's first parameter.
- * The parameter has a void * type to allow it to be used to pass any type.
- * For example, unsigned longs can be cast to a void *, or the void * can be
- * used to point to a structure.
- *
- * @param ulParameter2 The value of the callback function's second parameter.
- *
- * @param xTicksToWait Calling this function will result in a message being
- * sent to the timer daemon task on a queue.  xTicksToWait is the amount of
- * time the calling task should remain in the Blocked state (so not using any
- * processing time) for space to become available on the timer queue if the
- * queue is found to be full.
- *
- * @return pdPASS is returned if the message was successfully sent to the
- * timer daemon task, otherwise pdFALSE is returned.
- *
- */
-BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend,
-                                   void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait );
-
-/**
- * const char * const pcTimerGetTimerName( TimerHandle_t xTimer );
+ * const char * const pcTimerGetName( TimerHandle_t xTimer );
  *
  * Returns the name that was assigned to a timer when the timer was created.
  *
@@ -1135,18 +1270,40 @@ BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend,
  *
  * @return The name assigned to the timer specified by the xTimer parameter.
  */
-const char *pcTimerGetTimerName( TimerHandle_t
-                                 xTimer );  /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+const char * pcTimerGetName( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+
+/**
+ * TickType_t xTimerGetPeriod( TimerHandle_t xTimer );
+ *
+ * Returns the period of a timer.
+ *
+ * @param xTimer The handle of the timer being queried.
+ *
+ * @return The period of the timer in ticks.
+ */
+TickType_t xTimerGetPeriod( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+
+/**
+* TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer );
+*
+* Returns the time in ticks at which the timer will expire.  If this is less
+* than the current tick count then the expiry time has overflowed from the
+* current time.
+*
+* @param xTimer The handle of the timer being queried.
+*
+* @return If the timer is running then the time in ticks at which the timer
+* will next expire is returned.  If the timer is not running then the return
+* value is undefined.
+*/
+TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 
 /*
  * Functions beyond this part are not part of the public API and are intended
  * for use by the kernel only.
  */
 BaseType_t xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
-BaseType_t xTimerGenericCommand( TimerHandle_t xTimer,
-                                 const BaseType_t xCommandID, const TickType_t xOptionalValue,
-                                 BaseType_t *const pxHigherPriorityTaskWoken,
-                                 const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
+BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 #ifdef __cplusplus
 }

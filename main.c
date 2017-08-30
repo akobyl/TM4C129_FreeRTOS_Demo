@@ -91,7 +91,7 @@ void demoSerialTask(void *pvParameters)
 
     for (;;)
     {
-        UARTprintf("\r\nHello, world!");
+        UARTprintf("\r\nHello, world from FreeRTOS 9.0!");
         vTaskDelay(5000 / portTICK_PERIOD_MS);
     }
 }
