@@ -1,0 +1,1 @@
+--recursive --style=allman -s4 --indent-switches --break-blocks --pad-oper --pad-header --align-pointer=name --add-brackets --convert-tabs --max-code-length=80 --break-after-logical --suffix=none

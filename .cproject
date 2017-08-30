@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" id="com.ti.ccstudio.buildDefinitions.TMS470.Debug.126765794" name="Debug" parent="com.ti.ccstudio.buildDefinitions.TMS470.Debug" postbuildStep="" prebuildStep="">
+				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" id="com.ti.ccstudio.buildDefinitions.TMS470.Debug.126765794" name="Debug" parent="com.ti.ccstudio.buildDefinitions.TMS470.Debug" postbuildStep="" prebuildStep="astyle --options=&quot;${PROJECT_LOC}/astyle_options&quot; &quot;${PROJECT_LOC}/*.c&quot; &quot;${PROJECT_LOC}/*.h&quot; --exclude=&quot;${PROJECT_LOC}/driverlib&quot; --exclude=&quot;${PROJECT_LOC}/FreeRTOS&quot;">
 					<folderInfo id="com.ti.ccstudio.buildDefinitions.TMS470.Debug.126765794." name="/" resourcePath="">
 						<toolChain id="com.ti.ccstudio.buildDefinitions.TMS470_5.1.exe.DebugToolchain.1138418124" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.1.exe.DebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.TMS470_5.1.exe.linkerDebug.1832942452">
 							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.321573005" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
@@ -98,7 +98,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" id="com.ti.ccstudio.buildDefinitions.TMS470.Release.1515474732" name="Release" parent="com.ti.ccstudio.buildDefinitions.TMS470.Release" postbuildStep="" prebuildStep="">
+				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" id="com.ti.ccstudio.buildDefinitions.TMS470.Release.1515474732" name="Release" parent="com.ti.ccstudio.buildDefinitions.TMS470.Release" postbuildStep="" prebuildStep="astyle --options=&quot;${PROJECT_LOC}/astyle_options&quot; &quot;${PROJECT_LOC}/*.c&quot; &quot;${PROJECT_LOC}/*.h&quot; --exclude=&quot;${PROJECT_LOC}/driverlib&quot; --exclude=&quot;${PROJECT_LOC}/FreeRTOS&quot;">
 					<folderInfo id="com.ti.ccstudio.buildDefinitions.TMS470.Release.1515474732." name="/" resourcePath="">
 						<toolChain id="com.ti.ccstudio.buildDefinitions.TMS470_5.1.exe.ReleaseToolchain.470580389" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.1.exe.ReleaseToolchain" targetTool="com.ti.ccstudio.buildDefinitions.TMS470_5.1.exe.linkerRelease.1415205843">
 							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.1058432905" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">

@@ -1,6 +1,6 @@
 # Tiva TM4C1294 Launchpad FreeRTOS Demo #
 
-This firmware package is intended to provide a starting point for creating a FreeRTOS 8.2 based project in Code Composer Studio for the Tiva TM4C1294 launchpad, which is currently not supplied by either FreeRTOS or Texas Instruments.
+This firmware package is intended to provide a starting point for creating a FreeRTOS 9.0 based project in Code Composer Studio for the Tiva TM4C1294 launchpad, which is currently not supplied by either FreeRTOS or Texas Instruments.
 
 ## Required Components ##
 * Code Composer Studio (v6.0.1 used for this project)
@@ -8,7 +8,9 @@ This firmware package is intended to provide a starting point for creating a Fre
 * [Artistic Style](http://astyle.sourceforge.net/astyle.html) (optional for formatted code)
 
 ## Expected Output ##
-Code will build with no errors
+* Code will build with no errors or warnings
+* Green LEDs D1 - D4 will blink in sequence 1 per second
+* Serial port via Stellaris Virtual Serial Port will output "Hello, world from FreeRTOS 9.0!"
 
 ## Notes ##
-This software is provided as-is!  Testing is extremely limited at this point.
+This software is provided as-is!
