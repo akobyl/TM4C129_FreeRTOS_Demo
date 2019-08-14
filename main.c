@@ -1,4 +1,4 @@
-/* FreeRTOS 8.2 Tiva Demo
+/* FreeRTOS 10 Tiva Demo
  *
  * main.c
  *
@@ -54,6 +54,8 @@ int main(void)
                 configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
     vTaskStartScheduler();
+    
+    // Code should never reach this point
     return 0;
 }
 
@@ -88,10 +90,9 @@ void demoSerialTask(void *pvParameters)
     // Set up the UART which is connected to the virtual COM port
     UARTStdioConfig(0, 57600, SYSTEM_CLOCK);
 
-
     for (;;)
     {
-        UARTprintf("\r\nHello, world from FreeRTOS 9.0!");
+        UARTprintf("Hello, world from FreeRTOS 10.2!\r\n");
         vTaskDelay(5000 / portTICK_PERIOD_MS);
     }
 }
